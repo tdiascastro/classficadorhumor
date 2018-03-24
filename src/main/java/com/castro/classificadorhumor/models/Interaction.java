@@ -1,22 +1,20 @@
 package com.castro.classificadorhumor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Interaction {
+    @JsonProperty("Subject")
     private String subject;
+    @JsonProperty("Message")
     private String message;
-    private Date dateCreate;
+    @JsonProperty("DateCreate")
+    private String dateCreate;
+    @JsonProperty("Sender")
     private String sender;
-
-    public Interaction(String subject, String message, Date dateCreate, String sender) {
-        this.subject = subject;
-        this.message = message;
-        this.dateCreate = dateCreate;
-        this.sender = sender;
-    }
-
-    public Interaction() {
-    }
 
     public String getSubject() {
         return subject;
@@ -34,11 +32,11 @@ public class Interaction {
         this.message = message;
     }
 
-    public Date getDateCreate() {
+    public String getDateCreate() {
         return dateCreate;
     }
 
-    public void setDateCreate(Date dateCreate) {
+    public void setDateCreate(String dateCreate) {
         this.dateCreate = dateCreate;
     }
 

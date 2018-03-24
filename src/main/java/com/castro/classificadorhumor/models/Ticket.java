@@ -1,31 +1,29 @@
 package com.castro.classificadorhumor.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ticket {
+    @JsonProperty("TicketID")
     private Long ticketId;
+    @JsonProperty("CategoryID")
     private Long categoryId;
+    @JsonProperty("CustomerID")
     private Long customerId;
+    @JsonProperty("CustomerName")
     private String customerName;
+    @JsonProperty("CustomerEmail")
     private String customerEmail;
-    private Date dateCreate;
-    private Date dateUpdate;
+    @JsonProperty("DateCreate")
+    private String dateCreate;
+    @JsonProperty("DateUpdate")
+    private String dateUpdate;
+    @JsonProperty("Interactions")
     private List<Interaction> interactions;
-
-    public Ticket(Long ticketId, Long categoryId, Long customerId, String customerName, String customerEmail, Date dateCreate, Date dateUpdate, List<Interaction> interactions) {
-        this.ticketId = ticketId;
-        this.categoryId = categoryId;
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.customerEmail = customerEmail;
-        this.dateCreate = dateCreate;
-        this.dateUpdate = dateUpdate;
-        this.interactions = interactions;
-    }
-
-    public Ticket() {
-    }
 
     public Long getTicketId() {
         return ticketId;
@@ -67,19 +65,19 @@ public class Ticket {
         this.customerEmail = customerEmail;
     }
 
-    public Date getDateCreate() {
+    public String getDateCreate() {
         return dateCreate;
     }
 
-    public void setDateCreate(Date dateCreate) {
+    public void setDateCreate(String dateCreate) {
         this.dateCreate = dateCreate;
     }
 
-    public Date getDateUpdate() {
+    public String getDateUpdate() {
         return dateUpdate;
     }
 
-    public void setDateUpdate(Date dateUpdate) {
+    public void setDateUpdate(String dateUpdate) {
         this.dateUpdate = dateUpdate;
     }
 
