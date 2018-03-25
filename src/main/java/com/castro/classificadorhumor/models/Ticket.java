@@ -1,12 +1,11 @@
 package com.castro.classificadorhumor.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ticket {
     @JsonProperty("TicketID")
     private Long ticketId;
@@ -19,9 +18,11 @@ public class Ticket {
     @JsonProperty("CustomerEmail")
     private String customerEmail;
     @JsonProperty("DateCreate")
-    private String dateCreate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "BRT")
+    private LocalDateTime dateCreate;
     @JsonProperty("DateUpdate")
-    private String dateUpdate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "BRT")
+    private LocalDateTime dateUpdate;
     @JsonProperty("Interactions")
     private List<Interaction> interactions;
 
@@ -65,19 +66,19 @@ public class Ticket {
         this.customerEmail = customerEmail;
     }
 
-    public String getDateCreate() {
+    public LocalDateTime getDateCreate() {
         return dateCreate;
     }
 
-    public void setDateCreate(String dateCreate) {
+    public void setDateCreate(LocalDateTime dateCreate) {
         this.dateCreate = dateCreate;
     }
 
-    public String getDateUpdate() {
+    public LocalDateTime getDateUpdate() {
         return dateUpdate;
     }
 
-    public void setDateUpdate(String dateUpdate) {
+    public void setDateUpdate(LocalDateTime dateUpdate) {
         this.dateUpdate = dateUpdate;
     }
 
