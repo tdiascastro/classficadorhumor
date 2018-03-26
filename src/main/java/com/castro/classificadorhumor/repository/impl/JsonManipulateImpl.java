@@ -1,7 +1,7 @@
-package com.castro.classificadorhumor.service.impl;
+package com.castro.classificadorhumor.repository.impl;
 
 import com.castro.classificadorhumor.models.Ticket;
-import com.castro.classificadorhumor.service.JsonManipulateService;
+import com.castro.classificadorhumor.repository.JsonManipulateService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,12 @@ public class JsonManipulateImpl implements JsonManipulateService {
         this.objectMapper = objectMapper;
     }
 
-    public List<Ticket> list() throws IOException {
+    public List<Ticket> jsonRead() throws IOException {
         return objectMapper.readValue(new File("tickets.json"), new TypeReference<ArrayList<Ticket>>() {
         });
+    }
+
+    public void updateJson(Ticket ticket) throws IOException {
+
     }
 }

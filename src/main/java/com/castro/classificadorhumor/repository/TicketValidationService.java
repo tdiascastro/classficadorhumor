@@ -1,4 +1,4 @@
-package com.castro.classificadorhumor.service;
+package com.castro.classificadorhumor.repository;
 
 import com.castro.classificadorhumor.models.Ticket;
 

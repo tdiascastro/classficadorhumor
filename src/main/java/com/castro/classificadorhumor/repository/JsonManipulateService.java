@@ -1,4 +1,4 @@
-package com.castro.classificadorhumor.service;
+package com.castro.classificadorhumor.repository;
 
 import com.castro.classificadorhumor.models.Ticket;
 
@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface JsonManipulateService {
 
-    List<Ticket> list() throws IOException;
+    List<Ticket> jsonRead() throws IOException;
 }
