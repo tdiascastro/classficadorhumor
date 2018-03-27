@@ -4,15 +4,19 @@ import com.castro.classificadorhumor.models.Ticket;
 import com.castro.classificadorhumor.repository.JsonManipulateService;
 import com.castro.classificadorhumor.repository.TicketValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -29,8 +33,10 @@ public class TicketController implements Serializable {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<Ticket>> listTickets() throws IOException {
-        List<Ticket> tickets = ticketService.priorizedTickets();
+    public ResponseEntity<List<Ticket>> listTickets(
+            @RequestParam(value = "dateCreate.start", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate dateCreateStart,
+            @RequestParam(value = "dateCreate.end", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate dateCreateEnd) throws IOException {
+        List<Ticket> tickets = ticketService.priorizedTickets(dateCreateStart, dateCreateEnd);
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 }

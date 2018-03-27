@@ -8,11 +8,16 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketValidationImpl implements TicketValidationService {
@@ -30,8 +35,12 @@ public class TicketValidationImpl implements TicketValidationService {
     }
 
     @Override
-    public List<Ticket> priorizedTickets() throws IOException {
-        return service.updateJson(priorityAnalyse(service.jsonRead()));
+    public List<Ticket> priorizedTickets(LocalDate dateCreateStart, LocalDate dateCreateEnd) throws IOException {
+        List<Ticket> tickets = service.updateJson(priorityAnalyse(service.jsonRead()));
+        tickets = tickets.stream().filter(t -> t.getDateCreate().isAfter(Optional.ofNullable(LocalDateTime.of(dateCreateStart, LocalTime.of(0,0,0))).orElse(t.getDateCreate().minusDays(1))) &&
+                t.getDateCreate().isBefore(Optional.ofNullable(LocalDateTime.of(dateCreateEnd, LocalTime.of(0,0,0))).orElse(t.getDateCreate().plusDays(1)))
+        ).collect(Collectors.toList());
+        return tickets;
     }
 
     private List<Ticket> priorityAnalyse(final List<Ticket> tickets) {
