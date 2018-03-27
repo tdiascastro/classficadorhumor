@@ -23,6 +23,8 @@ public class Ticket {
     @JsonProperty("DateUpdate")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "BRT")
     private LocalDateTime dateUpdate;
+    @JsonProperty("Priority")
+    private String priority;
     @JsonProperty("Interactions")
     private List<Interaction> interactions;
 
@@ -82,6 +84,14 @@ public class Ticket {
         this.dateUpdate = dateUpdate;
     }
 
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
     public List<Interaction> getInteractions() {
         return interactions;
     }
@@ -89,4 +99,6 @@ public class Ticket {
     public void setInteractions(List<Interaction> interactions) {
         this.interactions = interactions;
     }
+
+
 }
