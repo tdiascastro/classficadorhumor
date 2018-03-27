@@ -27,7 +27,8 @@ public class JsonManipulateImpl implements JsonManipulateService {
         });
     }
 
-    public void updateJson(Ticket ticket) throws IOException {
-
+    public List<Ticket> updateJson(List<Ticket> tickets) throws IOException {
+        objectMapper.writeValue(new File("tickets.json"), tickets);
+        return tickets;
     }
 }

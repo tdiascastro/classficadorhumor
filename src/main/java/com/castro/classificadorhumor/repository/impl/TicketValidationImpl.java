@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.Normalizer;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,30 +30,27 @@ public class TicketValidationImpl implements TicketValidationService {
     }
 
     @Override
-    public List<Ticket> highPriority() throws IOException {
-        return priorityAnalyse(service.jsonRead());
+    public List<Ticket> priorizedTickets() throws IOException {
+        return service.updateJson(priorityAnalyse(service.jsonRead()));
     }
 
     private List<Ticket> priorityAnalyse(final List<Ticket> tickets) {
         final List<Ticket> priorizedTickets = new ArrayList<>();
         for (Ticket ticket : tickets) {
-            final int interaction = ticket.getInteractions().size();
-            for (int i = 0; i <= interaction; i++) {
-                final Matcher matcher = REGEX_WORDS.matcher(ticket.getInteractions().get(i).getMessage());
-                if (matcher.find()){
-                    setPriority(ticket, ALTA);
-                    priorizedTickets.add(ticket);
-                    break;
-                }
-                final long days = ChronoUnit.DAYS.between(ticket.getDateCreate(), ticket.getDateUpdate());
-                if (days > 30) {
-                    setPriority(ticket, ALTA);
-                    priorizedTickets.add(ticket);
-                    break;
-                }
-                setPriority(ticket, NORMAL);
-                priorizedTickets.add(ticket);
+            setPriority(ticket, NORMAL);
+            final long days = ChronoUnit.DAYS.between(ticket.getDateCreate(), ticket.getDateUpdate());
+            if (days > 30) {
+                setPriority(ticket, ALTA);
             }
+            final int interaction = ticket.getInteractions().size();
+            for (int i = 0; i < interaction; i++) {
+                final Matcher matcher = REGEX_WORDS.matcher(Normalizer.normalize(ticket.getInteractions().get(i).getMessage().toLowerCase(),
+                        Normalizer.Form.NFD).toLowerCase().replaceAll("[^\\p{ASCII}]", ""));
+                if (matcher.find()) {
+                    setPriority(ticket, ALTA);
+                }
+            }
+            priorizedTickets.add(ticket);
         }
         return priorizedTickets;
     }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TicketValidationService {
 
-    List<Ticket> highPriority() throws IOException;
+    List<Ticket> priorizedTickets() throws IOException;
 }
