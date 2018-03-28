@@ -35,8 +35,10 @@ public class TicketController implements Serializable {
     public ResponseEntity<List<Ticket>> listTickets(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate startDate,
             @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate endDate,
-            @RequestParam(value = "priority", required = false) String priority) throws IOException {
-        List<Ticket> tickets = ticketService.priorizedTickets(startDate, endDate, priority);
+            @RequestParam(value = "priority", required = false) String priority,
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "quantity", required = false, defaultValue = "10") int quantity) throws IOException {
+        List<Ticket> tickets = ticketService.priorizedTickets(startDate, endDate, priority, page, quantity);
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 }

@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface TicketValidationService {
 
-    List<Ticket> priorizedTickets(LocalDate startDate, LocalDate endDate, String priority) throws IOException;
+    List<Ticket> priorizedTickets(LocalDate startDate, LocalDate endDate, String priority, int page, int quantity) throws IOException;
 }

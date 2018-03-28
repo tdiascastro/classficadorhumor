@@ -36,8 +36,8 @@ public class TicketValidationServiceImpl implements TicketValidationService {
     }
 
     @Override
-    public List<Ticket> priorizedTickets(LocalDate startDate, LocalDate endDate, String priority) throws IOException {
-        return service.updateJson(priorityAnalyse(service.jsonRead()))
+    public List<Ticket> priorizedTickets(LocalDate startDate, LocalDate endDate, String priority, int page, int quantity) throws IOException {
+        List<Ticket> tickets = service.updateJson(priorityAnalyse(service.jsonRead()))
                 .stream()
                 .filter(t -> startDateFilter(t, Optional.ofNullable(startDate)))
                 .filter(t -> endDateFilter(t, Optional.ofNullable(endDate)))
@@ -46,6 +46,7 @@ public class TicketValidationServiceImpl implements TicketValidationService {
                         .thenComparing(Comparator.comparing(Ticket::getDateUpdate, Comparator.nullsLast(Comparator.naturalOrder())))
                         .thenComparing(Comparator.comparing(Ticket::getPriority, Comparator.nullsLast(Comparator.naturalOrder()))))
                 .collect(Collectors.toList());
+        return getSubListForPagination(tickets, page, quantity);
     }
 
     private List<Ticket> priorityAnalyse(final List<Ticket> tickets) {
@@ -75,17 +76,27 @@ public class TicketValidationServiceImpl implements TicketValidationService {
 
     private static boolean startDateFilter(final Ticket ticket, final Optional<LocalDate> startDate) {
         return !startDate.isPresent() ||
-                ticket.getDateCreate().isAfter(LocalDateTime.of(startDate.get(), LocalTime.of(0,0,0)));
+                ticket.getDateCreate().isAfter(LocalDateTime.of(startDate.get(), LocalTime.of(0, 0, 0)));
     }
 
     private static boolean endDateFilter(final Ticket ticket, final Optional<LocalDate> endDate) {
         return !endDate.isPresent() ||
-                ticket.getDateCreate().isBefore(LocalDateTime.of(endDate.get(), LocalTime.of(23,59,59)));
+                ticket.getDateCreate().isBefore(LocalDateTime.of(endDate.get(), LocalTime.of(23, 59, 59)));
     }
 
     private static boolean priorityFilter(final Ticket ticket, final Optional<String> priority) {
         return !priority.isPresent() ||
                 ticket.getPriority().equals(priority.get());
+    }
+
+
+    public List<Ticket> getSubListForPagination(List<Ticket> tickets, int page, int quantity) {
+        int fromIndex = page * quantity;
+        int toIndex = fromIndex + quantity;
+        if (toIndex > tickets.size()) {
+            toIndex = tickets.size();
+        }
+        return tickets.subList(fromIndex, toIndex);
     }
 
 }
