@@ -1,8 +1,8 @@
 package com.castro.classificadorhumor.controllers;
 
 import com.castro.classificadorhumor.models.Ticket;
-import com.castro.classificadorhumor.repository.JsonManipulateService;
-import com.castro.classificadorhumor.repository.TicketValidationService;
+import com.castro.classificadorhumor.service.JsonManipulateService;
+import com.castro.classificadorhumor.service.TicketValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.websocket.server.PathParam;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -34,9 +33,9 @@ public class TicketController implements Serializable {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Ticket>> listTickets(
-            @RequestParam(value = "dateCreate.start", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate dateCreateStart,
-            @RequestParam(value = "dateCreate.end", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate dateCreateEnd) throws IOException {
-        List<Ticket> tickets = ticketService.priorizedTickets(dateCreateStart, dateCreateEnd);
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate endDate) throws IOException {
+        List<Ticket> tickets = ticketService.priorizedTickets(startDate, endDate);
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 }

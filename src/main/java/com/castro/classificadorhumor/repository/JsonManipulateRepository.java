@@ -1,7 +1,7 @@
-package com.castro.classificadorhumor.repository.impl;
+package com.castro.classificadorhumor.repository;
 
 import com.castro.classificadorhumor.models.Ticket;
-import com.castro.classificadorhumor.repository.JsonManipulateService;
+import com.castro.classificadorhumor.service.JsonManipulateService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class JsonManipulateImpl implements JsonManipulateService {
+public class JsonManipulateRepository implements JsonManipulateService {
 
     private ObjectMapper objectMapper;
 
     @Autowired
-    public JsonManipulateImpl(final ObjectMapper objectMapper) {
+    public JsonManipulateRepository(final ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
