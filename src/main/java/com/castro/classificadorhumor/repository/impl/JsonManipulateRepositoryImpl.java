@@ -1,5 +1,6 @@
 package com.castro.classificadorhumor.repository.impl;
 
+import com.castro.classificadorhumor.exception.JsonException;
 import com.castro.classificadorhumor.models.Ticket;
 import com.castro.classificadorhumor.repository.JsonManipulateRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,13 +23,21 @@ public class JsonManipulateRepositoryImpl implements JsonManipulateRepository {
         this.objectMapper = objectMapper;
     }
 
-    public List<Ticket> jsonRead() throws IOException {
-        return objectMapper.readValue(new File("tickets.json"), new TypeReference<ArrayList<Ticket>>() {
-        });
+    public List<Ticket> jsonRead() throws JsonException {
+        try {
+            return objectMapper.readValue(new File("tickets.json"), new TypeReference<ArrayList<Ticket>>() {
+            });
+        } catch (IOException e) {
+            throw new JsonException(e.getMessage());
+        }
     }
 
-    public List<Ticket> updateJson(List<Ticket> tickets) throws IOException {
-        objectMapper.writeValue(new File("tickets.json"), tickets);
-        return tickets;
+    public List<Ticket> updateJson(List<Ticket> tickets) throws JsonException {
+        try {
+            objectMapper.writeValue(new File("tickets.json"), tickets);
+            return tickets;
+        } catch (IOException e) {
+            throw new JsonException(e.getMessage());
+        }
     }
 }

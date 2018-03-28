@@ -1,7 +1,6 @@
 package com.castro.classificadorhumor.controllers;
 
 import com.castro.classificadorhumor.models.Ticket;
-import com.castro.classificadorhumor.repository.JsonManipulateRepository;
 import com.castro.classificadorhumor.service.TicketValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,12 +21,10 @@ import java.util.List;
 @RequestMapping("/api/tickets")
 public class TicketController implements Serializable {
 
-    private JsonManipulateRepository jsonService;
     private TicketValidationService ticketService;
 
     @Autowired
-    public TicketController(final JsonManipulateRepository jsonService, final TicketValidationService ticketService) {
-        this.jsonService = jsonService;
+    public TicketController(final TicketValidationService ticketService) {
         this.ticketService = ticketService;
     }
 
