@@ -1,7 +1,7 @@
 package com.castro.classificadorhumor.controllers;
 
 import com.castro.classificadorhumor.models.Ticket;
-import com.castro.classificadorhumor.service.JsonManipulateService;
+import com.castro.classificadorhumor.repository.JsonManipulateRepository;
 import com.castro.classificadorhumor.service.TicketValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,11 +22,11 @@ import java.util.List;
 @RequestMapping("/api/tickets")
 public class TicketController implements Serializable {
 
-    private JsonManipulateService jsonService;
+    private JsonManipulateRepository jsonService;
     private TicketValidationService ticketService;
 
     @Autowired
-    public TicketController(final JsonManipulateService jsonService, final TicketValidationService ticketService) {
+    public TicketController(final JsonManipulateRepository jsonService, final TicketValidationService ticketService) {
         this.jsonService = jsonService;
         this.ticketService = ticketService;
     }
@@ -34,8 +34,9 @@ public class TicketController implements Serializable {
     @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Ticket>> listTickets(
             @RequestParam(value = "startDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate startDate,
-            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate endDate) throws IOException {
-        List<Ticket> tickets = ticketService.priorizedTickets(startDate, endDate);
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(pattern = "ddMMyyyy") LocalDate endDate,
+            @RequestParam(value = "priority", required = false) String priority) throws IOException {
+        List<Ticket> tickets = ticketService.priorizedTickets(startDate, endDate, priority);
         return new ResponseEntity<>(tickets, HttpStatus.OK);
     }
 }

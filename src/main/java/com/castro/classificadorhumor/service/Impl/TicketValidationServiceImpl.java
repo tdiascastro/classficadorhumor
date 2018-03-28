@@ -1,7 +1,7 @@
-package com.castro.classificadorhumor.repository;
+package com.castro.classificadorhumor.service.Impl;
 
 import com.castro.classificadorhumor.models.Ticket;
-import com.castro.classificadorhumor.service.JsonManipulateService;
+import com.castro.classificadorhumor.repository.JsonManipulateRepository;
 import com.castro.classificadorhumor.service.TicketValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,28 +21,30 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-public class TicketValidationRepository implements TicketValidationService {
+public class TicketValidationServiceImpl implements TicketValidationService {
 
     private static final String ALTA = "Alta";
     private static final String NORMAL = "Normal";
 
     final private Pattern REGEX_WORDS = Pattern.compile("(reclamacao+)|(nao recebemos+)|(nao consigo acessar+)|(tentativa de contato+)|(cancelamento+)|(quero cancelar+)|(problema+)|(procon+)|(reclameaqui+)|(reclame+)");
 
-    private JsonManipulateService service;
+    private JsonManipulateRepository service;
 
     @Autowired
-    public TicketValidationRepository(final JsonManipulateService service) {
+    public TicketValidationServiceImpl(final JsonManipulateRepository service) {
         this.service = service;
     }
 
     @Override
-    public List<Ticket> priorizedTickets(LocalDate startDate, LocalDate endDate) throws IOException {
+    public List<Ticket> priorizedTickets(LocalDate startDate, LocalDate endDate, String priority) throws IOException {
         return service.updateJson(priorityAnalyse(service.jsonRead()))
                 .stream()
-                .sorted(Comparator.comparing(Ticket::getDateCreate, Comparator.nullsLast(Comparator.naturalOrder()))
-                        .thenComparing(Comparator.comparing(Ticket::getDateUpdate, Comparator.nullsLast(Comparator.naturalOrder()))))
                 .filter(t -> startDateFilter(t, Optional.ofNullable(startDate)))
                 .filter(t -> endDateFilter(t, Optional.ofNullable(endDate)))
+                .filter(t -> priorityFilter(t, Optional.ofNullable(priority)))
+                .sorted(Comparator.comparing(Ticket::getDateCreate, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(Comparator.comparing(Ticket::getDateUpdate, Comparator.nullsLast(Comparator.naturalOrder())))
+                        .thenComparing(Comparator.comparing(Ticket::getPriority, Comparator.nullsLast(Comparator.naturalOrder()))))
                 .collect(Collectors.toList());
     }
 
@@ -79,6 +81,11 @@ public class TicketValidationRepository implements TicketValidationService {
     private static boolean endDateFilter(final Ticket ticket, final Optional<LocalDate> endDate) {
         return !endDate.isPresent() ||
                 ticket.getDateCreate().isBefore(LocalDateTime.of(endDate.get(), LocalTime.of(23,59,59)));
+    }
+
+    private static boolean priorityFilter(final Ticket ticket, final Optional<String> priority) {
+        return !priority.isPresent() ||
+                ticket.getPriority().equals(priority.get());
     }
 
 }
